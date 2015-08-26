@@ -22,6 +22,15 @@ angular.module('app', ['app.controllers', 'ui.router'])
                                 controller: 'HomeController'
                             }
                         }
+                    })
+                    .state('app.cliente', {
+                        url: "/cliente",
+                        views: {
+                            'details': {
+                                templateUrl: "template/cliente/grid.html",
+                                controller: 'ClienteController'
+                            }
+                        }
                     });
         });
 
@@ -62,6 +71,9 @@ angular.module('app.controllers').controller('AppController', function ($scope) 
     $scope.$on('$viewContentLoaded', function (event) {
         $('#side-menu').metisMenu();
     });
+});
+angular.module('app.controllers').controller('ClienteController', function ($scope) {
+
 });
 angular.module('app.controllers').controller('HomeController', function ($scope) {
 

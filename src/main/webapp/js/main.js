@@ -22,6 +22,15 @@ angular.module('app', ['app.controllers', 'ui.router'])
                                 controller: 'HomeController'
                             }
                         }
+                    })
+                    .state('app.cliente', {
+                        url: "/cliente",
+                        views: {
+                            'details': {
+                                templateUrl: "template/cliente/grid.html",
+                                controller: 'ClienteController'
+                            }
+                        }
                     });
         });
 
