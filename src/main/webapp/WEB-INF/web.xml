@@ -16,4 +16,13 @@
         <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
     </listener>
 
+   <filter>
+        <filter-name>cors</filter-name>
+        <filter-class>br.com.jonatabecker.filter.CorsFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>cors</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

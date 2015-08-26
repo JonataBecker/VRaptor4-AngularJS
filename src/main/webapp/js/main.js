@@ -1,5 +1,8 @@
+angular.module('app.service', []);
+angular.module('app.factory', []);
 angular.module('app.controllers', []);
-angular.module('app', ['app.controllers', 'ui.router'])
+angular.module('app', ['app.controllers', 'app.service', 'app.factory', 'ui.router', 'ngResource'])
+        .constant('HOSTNAME', 'http://localhost:8080/VRaptor4-AngularJS/')
         .config(function ($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise('/');
             $stateProvider
@@ -17,7 +20,7 @@ angular.module('app', ['app.controllers', 'ui.router'])
                     .state('app.home', {
                         url: "/home",
                         views: {
-                            'details': {
+                            'container': {
                                 templateUrl: "template/home.html",
                                 controller: 'HomeController'
                             }
@@ -26,8 +29,22 @@ angular.module('app', ['app.controllers', 'ui.router'])
                     .state('app.cliente', {
                         url: "/cliente",
                         views: {
-                            'details': {
+                            'container': {
                                 templateUrl: "template/cliente/grid.html",
+                                controller: function($scope, Cliente) {
+                                    $scope.itens = {};
+                                    Cliente.query({}, function(data){
+                                        $scope.itens = data;
+                                    });
+                                }
+                            }
+                        }
+                    })
+                    .state('app.clienteform', {
+                        url: "/cliente/{action:incluir|alterar|consultar}",
+                        views: {
+                            'container': {
+                                templateUrl: "template/cliente/form.html",
                                 controller: 'ClienteController'
                             }
                         }
