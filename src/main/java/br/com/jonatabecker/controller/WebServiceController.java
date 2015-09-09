@@ -58,7 +58,7 @@ public class WebServiceController {
      * @param repository Nome do repositório
      * @param data Dados da requisição
      */
-    @Post("/{repository}")
+    @Post("/api/{repository}")
     public void write(String repository, String data) {
         try {
             Repository obj = repositoryFactory.getRepository(repository);
@@ -77,7 +77,7 @@ public class WebServiceController {
      * @param pk Chave de acesso
      * @param data Dados da requisição
      */
-    @Put("/{repository}/{pk}")
+    @Put("/api/{repository}/{pk}")
     public void updade(String repository, String pk, String data) {
         try {
             Repository obj = repositoryFactory.getRepository(repository);
@@ -99,7 +99,7 @@ public class WebServiceController {
      * @param repository Nome do repositório
      * @param pk Chave de acesso
      */
-    @Delete("/{repository}/{pk}")
+    @Delete("/api/{repository}/{pk}")
     public void delete(String repository, String pk) {
         try {
             Repository obj = repositoryFactory.getRepository(repository);
@@ -109,14 +109,14 @@ public class WebServiceController {
         } catch (FactoryException e) {
             result.notFound();
         }
-    }    
-    
+    }
+
     /**
      * Executa busca de dados da entidade
      *
      * @param repository Nome do repositório
      */
-    @Get("/{repository}")
+    @Get("/api/{repository}")
     public void all(String repository) {
         try {
             Repository obj = repositoryFactory.getRepository(repository);
@@ -132,7 +132,7 @@ public class WebServiceController {
      * @param repository Nome do repositório
      * @param pk Chave de acesso
      */
-    @Get("/{repository}/{pk}")
+    @Get("/api/{repository}/{pk}")
     public void get(String repository, String pk) {
         try {
             Repository obj = repositoryFactory.getRepository(repository);
