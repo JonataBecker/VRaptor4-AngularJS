@@ -1,7 +1,8 @@
 angular.module('app.service', []);
 angular.module('app.factory', []);
 angular.module('app.controllers', []);
-angular.module('app', ['app.controllers', 'app.service', 'app.factory', 'ui.router', 'ngResource'])
+angular.module('app.directive', []);
+angular.module('app', ['app.service', 'app.factory', 'app.controllers', 'app.directive', 'ui.router', 'ngResource'])
         .constant('HOSTNAME', 'http://localhost:8080/VRaptor4-AngularJS/')
         .config(function ($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise('/');
@@ -31,9 +32,9 @@ angular.module('app', ['app.controllers', 'app.service', 'app.factory', 'ui.rout
                         views: {
                             'container': {
                                 templateUrl: "template/cliente/grid.html",
-                                controller: function($scope, Cliente) {
+                                controller: function ($scope, Cliente) {
                                     $scope.itens = {};
-                                    Cliente.query({}, function(data){
+                                    Cliente.query({}, function (data) {
                                         $scope.itens = data;
                                     });
                                 }
@@ -106,6 +107,16 @@ angular.module('app.controllers').controller('HomeController', function ($scope)
 });
 angular.module('app.controllers').controller('LoginController', function ($scope) {
 
+});
+angular.module('app.directive').directive('field', function() {
+   return {
+        restrict: 'E',
+        scope: {
+            label: '@label',
+            model: '=model'
+        },
+        templateUrl: 'template/directive/field.html' 
+    }; 
 });
 angular.module('app.factory').factory('Cliente', function(HOSTNAME, $resource) {
     return $resource(HOSTNAME + 'api/cliente');

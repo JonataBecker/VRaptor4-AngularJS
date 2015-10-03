@@ -48,7 +48,7 @@ public class DataTableController {
      *
      * @param entity
      */
-    @Get("/{entity}/title")
+    @Get("/datatable/{entity}/title")
     public void title(String entity) {
         try {
             List<String> campo = new ArrayList<>();
@@ -67,7 +67,7 @@ public class DataTableController {
      *
      * @param repository
      */
-    @Get("/{repository}/data")
+    @Get("/datatable/{repository}/data")
     public void data(String repository) {
         try {
             Repository obj = repositoryFactory.getRepository(repository);
