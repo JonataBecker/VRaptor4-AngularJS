@@ -41,8 +41,17 @@ angular.module('app', ['app.service', 'app.factory', 'app.controllers', 'app.dir
                             }
                         }
                     })
-                    .state('app.clienteform', {
-                        url: "/cliente/{action:incluir|alterar|consultar}",
+                    .state('app.clientenew', {
+                        url: "/cliente/{action:incluir}",
+                        views: {
+                            'container': {
+                                templateUrl: "template/cliente/form.html",
+                                controller: 'ClienteController'
+                            }
+                        }
+                    })
+                    .state('app.clienteedit', {
+                        url: "/cliente/{idCliente}/{action:alterar|consultar}",
                         views: {
                             'container': {
                                 templateUrl: "template/cliente/form.html",
@@ -85,16 +94,40 @@ $(function() {
 });
 
 
+angular.module('app.directive').directive('field', function() {
+   return {
+        restrict: 'E',
+        scope: {
+            label: '@label',
+            model: '=model'
+        },
+        templateUrl: 'template/directive/field.html' 
+    }; 
+});
 angular.module('app.controllers').controller('AppController', function ($scope) {
     $scope.$on('$viewContentLoaded', function (event) {
         $('#side-menu').metisMenu();
     });
 });
-angular.module('app.controllers').controller('ClienteController', function ($scope, $state, $stateParams, Cliente) {
+/**
+ * Controller responsável pela manuteção de clientes
+ */
+angular.module('app.controllers').controller('ClienteController', function ($scope, $state, $stateParams, Request, Cliente) {
     $scope.action = $stateParams.action;
     $scope.cliente = {};
-    $scope.addCliente = function () {
+    // Se deve carregar cliente
+    if (Request.isAlterarConsultar($scope.action)) {
+        Cliente.get({idCliente: $stateParams.idCliente}, function(data) {
+            $scope.cliente = data;
+        });
+    }
+    // Evento de submição do formulário
+    $scope.submit = function () {
         var cli = new Cliente();
+        // Se for alteração 
+        if (Request.isAlterar($scope.action)) {
+            cli.idCliente = $stateParams.idCliente;
+        }
         cli.$save({data: $scope.cliente});
         $state.go('app.cliente');
     };
@@ -108,16 +141,57 @@ angular.module('app.controllers').controller('HomeController', function ($scope)
 angular.module('app.controllers').controller('LoginController', function ($scope) {
 
 });
-angular.module('app.directive').directive('field', function() {
-   return {
-        restrict: 'E',
-        scope: {
-            label: '@label',
-            model: '=model'
-        },
-        templateUrl: 'template/directive/field.html' 
-    }; 
-});
 angular.module('app.factory').factory('Cliente', function(HOSTNAME, $resource) {
-    return $resource(HOSTNAME + 'api/cliente');
+    return $resource(HOSTNAME + 'api/cliente/:idCliente');
+});
+/**
+ * Objeto responsavel por funçoes de controle de requisiçoes
+ */
+angular.module('app.factory').factory('Request', function() {
+    var request = {};
+    request.ACTION_ALTERAR = "alterar";
+    request.ACTION_CONSULTAR = "consultar";
+    request.ACTION_INCLUIR = "incluir";
+    
+    /**
+     * Retorna veradeiro se açao for alterar
+     * 
+     * @param {String} action
+     * @returns {Boolean}
+     */
+    request.isAlterar = function (action) {
+        return action === request.ACTION_ALTERAR;
+    };
+
+    /**
+     * Retorna veradeiro se açao for incluir
+     * 
+     * @param {String} action
+     * @returns {Boolean}
+     */
+    request.isIncluir = function (action) {
+        return action === request.ACTION_INCLUIR;
+    };
+
+    /**
+     * Retorna veradeiro se açao for consultar
+     * 
+     * @param {String} action
+     * @returns {Boolean}
+     */
+    request.isConsultar = function (action) {
+        return action === request.ACTION_CONSULTAR;
+    };
+    
+    /**
+     * Retorna veradeiro se for açao de alteraçao/consulta
+     * 
+     * @param {String} action
+     * @returns {Boolean}
+     */
+    request.isAlterarConsultar = function (action) {
+        return request.isAlterar(action) || request.isConsultar(action);
+    };        
+    
+    return request;
 });

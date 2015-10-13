@@ -3,7 +3,8 @@ var gulp = require('gulp'),
         uglify = require('gulp-uglify'),
         sass = require('gulp-sass'),
         connect = require('gulp-connect'),
-        shell = require('gulp-shell');
+        shell = require('gulp-shell'),
+        os = require('os');
 
 gulp.task('default', function () {
     gulp.start('watch');
@@ -46,7 +47,11 @@ gulp.task('serve', function () {
         port: 8000,
         livereload: true
     });
+    var comand = 'start';
+    if (os.platform() === 'linux') {
+        comand = 'x-www-browser';
+    }
     gulp.start('watch');
     gulp.src('src/main/webapp/index.html')
-            .pipe(shell(['start http://localhost:8000']));
+            .pipe(shell([comand + ' http://localhost:8000']));
 });

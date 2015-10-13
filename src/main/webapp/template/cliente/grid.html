@@ -20,6 +20,7 @@
                                 <th>Código</th>
                                 <th>Razão social</th>
                                 <th>Fantasia</th>
+                                <th>Açao</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -27,6 +28,11 @@
                                 <td>{{ item.idCliente }}</td>
                                 <td>{{ item.razaoSocial }}</td>
                                 <td>{{ item.fantasia }}</td>
+                                <td align="center">
+                                    <a href="#/app/cliente/{{ item.idCliente }}/consultar" class="glyphicon glyphicon-zoom-in"></a>
+                                    <a href="#/app/cliente/{{ item.idCliente }}/alterar" class="glyphicon glyphicon-pencil"></a>
+                                    <a href="#/app/cliente/excluir" class="glyphicon glyphicon-remove"></a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

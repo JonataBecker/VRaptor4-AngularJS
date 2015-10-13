@@ -41,8 +41,17 @@ angular.module('app', ['app.service', 'app.factory', 'app.controllers', 'app.dir
                             }
                         }
                     })
-                    .state('app.clienteform', {
-                        url: "/cliente/{action:incluir|alterar|consultar}",
+                    .state('app.clientenew', {
+                        url: "/cliente/{action:incluir}",
+                        views: {
+                            'container': {
+                                templateUrl: "template/cliente/form.html",
+                                controller: 'ClienteController'
+                            }
+                        }
+                    })
+                    .state('app.clienteedit', {
+                        url: "/cliente/{idCliente}/{action:alterar|consultar}",
                         views: {
                             'container': {
                                 templateUrl: "template/cliente/form.html",

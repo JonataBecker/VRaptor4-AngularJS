@@ -1,3 +1,3 @@
 angular.module('app.factory').factory('Cliente', function(HOSTNAME, $resource) {
-    return $resource(HOSTNAME + 'api/cliente');
+    return $resource(HOSTNAME + 'api/cliente/:idCliente');
 });
