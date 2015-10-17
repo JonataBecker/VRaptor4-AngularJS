@@ -1,0 +1,13 @@
+{
+    "elements": {
+        "datatable": {
+            "attributes": {
+                "idtable": {},
+                "idTable": {},
+                "id": {},
+                "entity": {}
+            }
+        }
+    },
+    "attributes": {}
+}

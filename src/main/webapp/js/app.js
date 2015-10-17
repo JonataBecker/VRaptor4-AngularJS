@@ -1,3 +1,4 @@
+/* global angular */
 angular.module('app.service', []);
 angular.module('app.factory', []);
 angular.module('app.controllers', []);
@@ -31,13 +32,7 @@ angular.module('app', ['app.service', 'app.factory', 'app.controllers', 'app.dir
                         url: "/cliente",
                         views: {
                             'container': {
-                                templateUrl: "template/cliente/grid.html",
-                                controller: function ($scope, Cliente) {
-                                    $scope.itens = {};
-                                    Cliente.query({}, function (data) {
-                                        $scope.itens = data;
-                                    });
-                                }
+                                templateUrl: "template/cliente/grid.html"
                             }
                         }
                     })
@@ -94,16 +89,6 @@ $(function() {
 });
 
 
-angular.module('app.directive').directive('field', function() {
-   return {
-        restrict: 'E',
-        scope: {
-            label: '@label',
-            model: '=model'
-        },
-        templateUrl: 'template/directive/field.html' 
-    }; 
-});
 angular.module('app.controllers').controller('AppController', function ($scope) {
     $scope.$on('$viewContentLoaded', function (event) {
         $('#side-menu').metisMenu();
@@ -141,8 +126,68 @@ angular.module('app.controllers').controller('HomeController', function ($scope)
 angular.module('app.controllers').controller('LoginController', function ($scope) {
 
 });
+/* global angular */
+angular.module('app.directive').directive('datatable', function () {
+    return {
+        restrict: 'E',
+        scope: {
+            entity: '@entity',
+            idtable: '@idtable'
+        },
+        templateUrl: 'template/directive/datatable.html',
+        controller: function ($scope, $q, $timeout, Datatable) {
+            $scope.header = {};
+            $scope.itens = {};
+            var getTitle = Datatable.getTitle($scope.entity);
+            var getData = Datatable.getData($scope.entity);
+            $q.all([getTitle, getData]).then(function (data) {
+                $scope.header = data[0];
+                $scope.itens = data[1];
+                // Cria Data Table
+                $timeout(function () {
+                    $('#' + $scope.idtable).DataTable({
+                        responsive: true
+                    });
+                });
+            });
+        }
+    };
+});
+/* global angular */
+angular.module('app.directive').directive('field', function() {
+   return {
+        restrict: 'E',
+        scope: {
+            label: '@label',
+            model: '=model'
+        },
+        templateUrl: 'template/directive/field.html' 
+    }; 
+});
 angular.module('app.factory').factory('Cliente', function(HOSTNAME, $resource) {
     return $resource(HOSTNAME + 'api/cliente/:idCliente');
+});
+angular.module('app.factory').factory('Datatable', function(HOSTNAME, $resource, $q) {
+    // Busca informações referente ao datatabel
+    var getInfo = function (entity, info) {
+        var deferred = $q.defer();
+        var titles = $resource(HOSTNAME + 'datatable/:entity/:info', 
+            {entity:entity, info:info},
+            {'query': { method:'GET', cache: false, isArray:true }}
+        );
+        titles.query(function (data) {
+            deferred.resolve(data);
+        });
+        return deferred.promise;
+    };
+    return {
+        getTitle: function (entity) {
+            return getInfo(entity, 'title');
+        },
+        getData: function (entity) {
+            return getInfo(entity, 'data');
+        }        
+    };
 });
 /**
  * Objeto responsavel por funçoes de controle de requisiçoes

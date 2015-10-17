@@ -1,3 +1,4 @@
+/* global angular */
 angular.module('app.directive').directive('field', function() {
    return {
         restrict: 'E',

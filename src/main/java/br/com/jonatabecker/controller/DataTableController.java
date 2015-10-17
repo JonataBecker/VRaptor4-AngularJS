@@ -4,6 +4,7 @@ import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.view.Results;
+import br.com.jonatabecker.annotations.NoCache;
 import br.com.jonatabecker.db.Entity;
 import br.com.jonatabecker.db.EntityFactory;
 import br.com.jonatabecker.db.Repository;
@@ -48,6 +49,7 @@ public class DataTableController {
      *
      * @param entity
      */
+    @NoCache
     @Get("/datatable/{entity}/title")
     public void title(String entity) {
         try {
@@ -67,6 +69,7 @@ public class DataTableController {
      *
      * @param repository
      */
+    @NoCache
     @Get("/datatable/{repository}/data")
     public void data(String repository) {
         try {

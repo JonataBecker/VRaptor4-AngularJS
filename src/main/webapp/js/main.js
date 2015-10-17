@@ -1,3 +1,4 @@
+/* global angular */
 angular.module('app.service', []);
 angular.module('app.factory', []);
 angular.module('app.controllers', []);
@@ -31,13 +32,7 @@ angular.module('app', ['app.service', 'app.factory', 'app.controllers', 'app.dir
                         url: "/cliente",
                         views: {
                             'container': {
-                                templateUrl: "template/cliente/grid.html",
-                                controller: function ($scope, Cliente) {
-                                    $scope.itens = {};
-                                    Cliente.query({}, function (data) {
-                                        $scope.itens = data;
-                                    });
-                                }
+                                templateUrl: "template/cliente/grid.html"
                             }
                         }
                     })
