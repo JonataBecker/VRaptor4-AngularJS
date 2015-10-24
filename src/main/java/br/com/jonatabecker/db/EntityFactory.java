@@ -40,7 +40,6 @@ public class EntityFactory {
      */
     public <E extends Entity> E create(String repository, String data) throws FactoryException{
         try {
-            String name = buildClassName(repository);
             Gson gson = new Gson();
             return (E) gson.fromJson(data, Class.forName(buildClassName(repository)));
         } catch (ClassNotFoundException e) {

@@ -1,35 +1,28 @@
 package br.com.jonatabecker.dicionario;
 
 /**
- * Classe responsável pelas informações do dicionário de dados
+ * Classe responsável pelas informações de campos do dicionário de dados
  *
  * @author Jonata Becker
  */
 public class Campo {
 
-    /** Código do campo */
-    private long idCampo;
     /** Nome */
-    private String nome;
+    private final String nome;
     /** Legenda */
-    private String legenda;
+    private final String legenda;
+    /** Tipo do campo */
+    private CampoTipo tipo;
 
     /**
-     * Retorna o código do campo
+     * Construtor da classe responsável por informações de campos do dicionário de dados
      *
-     * @return long
+     * @param nome
+     * @param legenda
      */
-    public long getIdCampo() {
-        return idCampo;
-    }
-
-    /**
-     * Define o código do campo
-     *
-     * @param idCampo
-     */
-    public void setIdCampo(long idCampo) {
-        this.idCampo = idCampo;
+    public Campo(String nome, String legenda) {
+        this.nome = nome;
+        this.legenda = legenda;
     }
 
     /**
@@ -42,15 +35,6 @@ public class Campo {
     }
 
     /**
-     * Define o nome do campo
-     *
-     * @param nome
-     */
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    /**
      * Retorna a legenda do campo
      *
      * @return String
@@ -60,12 +44,21 @@ public class Campo {
     }
 
     /**
-     * Define a legenda do campo
+     * Retorna o tipo do campo
      *
-     * @param legenda
+     * @return CampoTipo
      */
-    public void setLegenda(String legenda) {
-        this.legenda = legenda;
+    public CampoTipo getTipo() {
+        return tipo;
+    }
+
+    /**
+     * Define o tipo do campo
+     *
+     * @param tipo
+     */
+    public void setTipo(CampoTipo tipo) {
+        this.tipo = tipo;
     }
 
 }
