@@ -9,10 +9,14 @@ import br.com.jonatabecker.db.Entity;
 import br.com.jonatabecker.db.EntityFactory;
 import br.com.jonatabecker.db.Repository;
 import br.com.jonatabecker.db.RepositoryFactory;
+import br.com.jonatabecker.dicionario.Dicionario;
+import br.com.jonatabecker.dicionario.Entidade;
 import br.com.jonatabecker.exception.FactoryException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.inject.Inject;
 
 /**
@@ -29,19 +33,23 @@ public class DataTableController {
     private final RepositoryFactory repositoryFactory;
     /** Objeto responsável pela construção de entidades */
     private final EntityFactory entityFactory;
-
+    /** Objeto responsável pelo dicionário de dados */
+    private final Dicionario dicionario;
+    
     /**
      * @deprecated CDI eyes only
      */
     protected DataTableController() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     @Inject
-    public DataTableController(Result result, RepositoryFactory repositoryFactory, EntityFactory entityFactory) {
+    public DataTableController(Result result, RepositoryFactory repositoryFactory, 
+            EntityFactory entityFactory, Dicionario dicionario) {
         this.result = result;
         this.repositoryFactory = repositoryFactory;
         this.entityFactory = entityFactory;
+        this.dicionario = dicionario;
     }
 
     /**
@@ -53,10 +61,12 @@ public class DataTableController {
     @Get("/datatable/{entity}/title")
     public void title(String entity) {
         try {
-            List<String> campo = new ArrayList<>();
+            Map<String, String> campo = new LinkedHashMap<>();
             Entity ent = entityFactory.create(entity);
+            Entidade dicionarioEntidade = dicionario.getEntidade(entity);
             for (Field field : ent.getClass().getDeclaredFields()) {
-                campo.add(field.getName());
+                String fieldName = field.getName();
+                campo.put(fieldName, dicionarioEntidade.getCampo(fieldName).getLegenda());
             }
             result.use(Results.json()).withoutRoot().from(campo).serialize();
         } catch(FactoryException e) {

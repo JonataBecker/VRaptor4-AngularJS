@@ -32,7 +32,8 @@ angular.module('app', ['app.service', 'app.factory', 'app.controllers', 'app.dir
                         url: "/cliente",
                         views: {
                             'container': {
-                                templateUrl: "template/cliente/grid.html"
+                                templateUrl: "template/cliente/grid.html",
+                                controller: 'ClienteController'
                             }
                         }
                     })

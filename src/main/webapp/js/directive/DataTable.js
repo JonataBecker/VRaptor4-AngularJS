@@ -4,7 +4,8 @@ angular.module('app.directive').directive('datatable', function () {
         restrict: 'E',
         scope: {
             entity: '@entity',
-            idtable: '@idtable'
+            idtable: '@idtable',
+            columns: '=columns'
         },
         templateUrl: 'template/directive/datatable.html',
         controller: function ($scope, $q, $timeout, Datatable) {

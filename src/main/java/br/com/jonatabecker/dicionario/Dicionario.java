@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 /**
  * Classe responsável controlar informações do dicionário de dados
@@ -14,16 +15,42 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class Dicionario {
 
+    /** Objeto responsável pelo carregamento de dados do dicionário */
+    private final CarregadorDicionario carregadorDicionario;
+    
     /** Lista de entidades */
     private final Map<String, Entidade> entidades;
 
+
     /**
-     * Construtor da classe responsável por controlar informações do dicionário de dados
+     * @deprecated CDI eyes only
      */
     public Dicionario() {
-        this.entidades = new TreeMap<>();
+        this(null);
     }
 
+    /**
+     * Construtor da classe responsável por controlar informações do dicionário de dados
+     * 
+     * @param carregadorDicionario Objeto responsável pelo carregamento e dados do dicionário
+     */
+    @Inject
+    public Dicionario(CarregadorDicionario carregadorDicionario) {
+        this.carregadorDicionario = carregadorDicionario;
+        this.entidades = new TreeMap<>();
+        loadDicionario();
+    }
+    
+    /**
+     * Carrega entidades para o dicionário
+     */
+    private void loadDicionario() {
+        if (carregadorDicionario == null) {
+            return;
+        }
+        carregadorDicionario.buscaEntidades().stream().forEach((entidade) -> addEntidade(entidade));
+    }
+    
     /**
      * Adiciona entidade
      *

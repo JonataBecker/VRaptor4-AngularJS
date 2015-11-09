@@ -32,7 +32,8 @@ angular.module('app', ['app.service', 'app.factory', 'app.controllers', 'app.dir
                         url: "/cliente",
                         views: {
                             'container': {
-                                templateUrl: "template/cliente/grid.html"
+                                templateUrl: "template/cliente/grid.html",
+                                controller: 'ClienteController'
                             }
                         }
                     })
@@ -100,13 +101,11 @@ angular.module('app.controllers').controller('AppController', function ($scope) 
 angular.module('app.controllers').controller('ClienteController', function ($scope, $state, $stateParams, Request, Cliente) {
     $scope.action = $stateParams.action;
     $scope.cliente = {};
-    // Se deve carregar cliente
-    if (Request.isAlterarConsultar($scope.action)) {
-        Cliente.get({idCliente: $stateParams.idCliente}, function(data) {
-            $scope.cliente = data;
-        });
-    }
-    // Evento de submição do formulário
+    $scope.dataTableColumns = [];
+    
+    /**
+     * Evento de submição do formulário
+     */
     $scope.submit = function () {
         var cli = new Cliente();
         // Se for alteração 
@@ -116,6 +115,24 @@ angular.module('app.controllers').controller('ClienteController', function ($sco
         cli.$save({data: $scope.cliente});
         $state.go('app.cliente');
     };
+    
+    /**
+     * Retorna lista de itens do Data Table de clientes
+     */
+    var loadDataTableColumns = function() {
+        $scope.dataTableColumns = [];
+        $scope.dataTableColumns.push({nome:"idCliente"});
+        $scope.dataTableColumns.push({nome:"razaoSocial"});
+        $scope.dataTableColumns.push({nome:"fantasia"});
+    };
+    
+    // Se deve carregar cliente
+    if (Request.isAlterarConsultar($scope.action)) {
+        Cliente.get({idCliente: $stateParams.idCliente}, function(data) {
+            $scope.cliente = data;
+        });
+    }
+    loadDataTableColumns();
 });
 angular.module('app.controllers').controller('HomeController', function ($scope) {
 
@@ -132,7 +149,8 @@ angular.module('app.directive').directive('datatable', function () {
         restrict: 'E',
         scope: {
             entity: '@entity',
-            idtable: '@idtable'
+            idtable: '@idtable',
+            columns: '=columns'
         },
         templateUrl: 'template/directive/datatable.html',
         controller: function ($scope, $q, $timeout, Datatable) {
@@ -168,24 +186,31 @@ angular.module('app.factory').factory('Cliente', function(HOSTNAME, $resource) {
     return $resource(HOSTNAME + 'api/cliente/:idCliente');
 });
 angular.module('app.factory').factory('Datatable', function(HOSTNAME, $resource, $q) {
-    // Busca informações referente ao datatabel
-    var getInfo = function (entity, info) {
-        var deferred = $q.defer();
-        var titles = $resource(HOSTNAME + 'datatable/:entity/:info', 
-            {entity:entity, info:info},
-            {'query': { method:'GET', cache: false, isArray:true }}
-        );
-        titles.query(function (data) {
-            deferred.resolve(data);
-        });
-        return deferred.promise;
+    // Retorna hostname
+    var getHostName = function () {
+        return HOSTNAME + 'datatable/:entity/:info';
     };
     return {
         getTitle: function (entity) {
-            return getInfo(entity, 'title');
+            var deferred = $q.defer();
+            var titles = $resource(getHostName(), 
+                {entity:entity, info:'title'}
+            );
+            titles.get(function (data) {
+                deferred.resolve(data);
+            });
+            return deferred.promise;
         },
         getData: function (entity) {
-            return getInfo(entity, 'data');
+            var deferred = $q.defer();
+            var titles = $resource(getHostName(), 
+                {entity:entity, info:'data'},
+                {'query': { method:'GET', cache: false, isArray:true }}
+            );
+            titles.query(function (data) {
+                deferred.resolve(data);
+            });
+            return deferred.promise;
         }        
     };
 });

@@ -1,13 +1,13 @@
 <div class="dataTable_wrapper">
     <table class="table table-striped table-bordered table-hover" id="{{ idtable }}">
         <thead>
-            <tr>
-                <th ng-repeat="hr in header">{{ hr }}</th>
+            <tr>                
+                <th ng-repeat="col in columns">{{ header[col.nome] }}</th>
             </tr>
         </thead>
         <tbody>
             <tr class="odd gradeX" ng-repeat="item in itens">
-                <td ng-repeat="hr in header">{{ item[hr] }}</td>      
+                <td ng-repeat="col in columns">{{ item[col.nome] }}</td>      
             </tr>            
         </tbody>
     </table>

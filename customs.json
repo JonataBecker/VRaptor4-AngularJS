@@ -1,13 +1,23 @@
 {
     "elements": {
+        "datatable-item": {
+            "attributes": {
+                "name": {}
+            }
+        },
+        "datatableitem": {},
         "datatable": {
             "attributes": {
                 "idtable": {},
+                "itens": {},
                 "idTable": {},
+                "columns": {},
                 "id": {},
                 "entity": {}
             }
         }
     },
-    "attributes": {}
+    "attributes": {
+        "name": {}
+    }
 }
