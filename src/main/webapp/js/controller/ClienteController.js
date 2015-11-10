@@ -5,6 +5,7 @@ angular.module('app.controllers').controller('ClienteController', function ($sco
     $scope.action = $stateParams.action;
     $scope.cliente = {};
     $scope.dataTableColumns = [];
+    $scope.dataTableActions = [];
     
     /**
      * Evento de submição do formulário
@@ -29,6 +30,15 @@ angular.module('app.controllers').controller('ClienteController', function ($sco
         $scope.dataTableColumns.push({nome:"fantasia"});
     };
     
+    /**
+     * Retorna lista de ações do Data Table de clientes
+     */
+    var loadDataTableActions = function() {
+        $scope.dataTableActions = [];
+        $scope.dataTableActions.push({link:"/alterar"});
+        $scope.dataTableActions.push({link:"/consultar"});
+    };
+    
     // Se deve carregar cliente
     if (Request.isAlterarConsultar($scope.action)) {
         Cliente.get({idCliente: $stateParams.idCliente}, function(data) {
@@ -36,4 +46,5 @@ angular.module('app.controllers').controller('ClienteController', function ($sco
         });
     }
     loadDataTableColumns();
+    loadDataTableActions();
 });

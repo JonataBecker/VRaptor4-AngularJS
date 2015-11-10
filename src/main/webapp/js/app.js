@@ -90,59 +90,6 @@ $(function() {
 });
 
 
-angular.module('app.controllers').controller('AppController', function ($scope) {
-    $scope.$on('$viewContentLoaded', function (event) {
-        $('#side-menu').metisMenu();
-    });
-});
-/**
- * Controller responsável pela manuteção de clientes
- */
-angular.module('app.controllers').controller('ClienteController', function ($scope, $state, $stateParams, Request, Cliente) {
-    $scope.action = $stateParams.action;
-    $scope.cliente = {};
-    $scope.dataTableColumns = [];
-    
-    /**
-     * Evento de submição do formulário
-     */
-    $scope.submit = function () {
-        var cli = new Cliente();
-        // Se for alteração 
-        if (Request.isAlterar($scope.action)) {
-            cli.idCliente = $stateParams.idCliente;
-        }
-        cli.$save({data: $scope.cliente});
-        $state.go('app.cliente');
-    };
-    
-    /**
-     * Retorna lista de itens do Data Table de clientes
-     */
-    var loadDataTableColumns = function() {
-        $scope.dataTableColumns = [];
-        $scope.dataTableColumns.push({nome:"idCliente"});
-        $scope.dataTableColumns.push({nome:"razaoSocial"});
-        $scope.dataTableColumns.push({nome:"fantasia"});
-    };
-    
-    // Se deve carregar cliente
-    if (Request.isAlterarConsultar($scope.action)) {
-        Cliente.get({idCliente: $stateParams.idCliente}, function(data) {
-            $scope.cliente = data;
-        });
-    }
-    loadDataTableColumns();
-});
-angular.module('app.controllers').controller('HomeController', function ($scope) {
-
-
-
-
-});
-angular.module('app.controllers').controller('LoginController', function ($scope) {
-
-});
 /* global angular */
 angular.module('app.directive').directive('datatable', function () {
     return {
@@ -150,7 +97,8 @@ angular.module('app.directive').directive('datatable', function () {
         scope: {
             entity: '@entity',
             idtable: '@idtable',
-            columns: '=columns'
+            columns: '=columns',
+            actions: '=actions'
         },
         templateUrl: 'template/directive/datatable.html',
         controller: function ($scope, $q, $timeout, Datatable) {
@@ -182,6 +130,70 @@ angular.module('app.directive').directive('field', function() {
         templateUrl: 'template/directive/field.html' 
     }; 
 });
+angular.module('app.controllers').controller('AppController', function ($scope) {
+    $scope.$on('$viewContentLoaded', function (event) {
+        $('#side-menu').metisMenu();
+    });
+});
+/**
+ * Controller responsável pela manuteção de clientes
+ */
+angular.module('app.controllers').controller('ClienteController', function ($scope, $state, $stateParams, Request, Cliente) {
+    $scope.action = $stateParams.action;
+    $scope.cliente = {};
+    $scope.dataTableColumns = [];
+    $scope.dataTableActions = [];
+    
+    /**
+     * Evento de submição do formulário
+     */
+    $scope.submit = function () {
+        var cli = new Cliente();
+        // Se for alteração 
+        if (Request.isAlterar($scope.action)) {
+            cli.idCliente = $stateParams.idCliente;
+        }
+        cli.$save({data: $scope.cliente});
+        $state.go('app.cliente');
+    };
+    
+    /**
+     * Retorna lista de itens do Data Table de clientes
+     */
+    var loadDataTableColumns = function() {
+        $scope.dataTableColumns = [];
+        $scope.dataTableColumns.push({nome:"idCliente"});
+        $scope.dataTableColumns.push({nome:"razaoSocial"});
+        $scope.dataTableColumns.push({nome:"fantasia"});
+    };
+    
+    /**
+     * Retorna lista de ações do Data Table de clientes
+     */
+    var loadDataTableActions = function() {
+        $scope.dataTableActions = [];
+        $scope.dataTableActions.push({link:"/alterar"});
+        $scope.dataTableActions.push({link:"/consultar"});
+    };
+    
+    // Se deve carregar cliente
+    if (Request.isAlterarConsultar($scope.action)) {
+        Cliente.get({idCliente: $stateParams.idCliente}, function(data) {
+            $scope.cliente = data;
+        });
+    }
+    loadDataTableColumns();
+    loadDataTableActions();
+});
+angular.module('app.controllers').controller('HomeController', function ($scope) {
+
+
+
+
+});
+angular.module('app.controllers').controller('LoginController', function ($scope) {
+
+});
 angular.module('app.factory').factory('Cliente', function(HOSTNAME, $resource) {
     return $resource(HOSTNAME + 'api/cliente/:idCliente');
 });
@@ -207,7 +219,7 @@ angular.module('app.factory').factory('Datatable', function(HOSTNAME, $resource,
                 {entity:entity, info:'data'},
                 {'query': { method:'GET', cache: false, isArray:true }}
             );
-            titles.query(function (data) {
+            titles.query(function (data) {                
                 deferred.resolve(data);
             });
             return deferred.promise;

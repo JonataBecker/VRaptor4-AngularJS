@@ -3,11 +3,15 @@
         <thead>
             <tr>                
                 <th ng-repeat="col in columns">{{ header[col.nome] }}</th>
+                <th align="center" ng-if="actions.length > 0">Ações</th>
             </tr>
         </thead>
         <tbody>
             <tr class="odd gradeX" ng-repeat="item in itens">
-                <td ng-repeat="col in columns">{{ item[col.nome] }}</td>      
+                <td ng-repeat="col in columns">{{ item[col.nome] }}</td>
+                <td align="center" ng-if="actions.length > 0">
+                    <a ng-repeat="ac in actions" href="{{ ac }}" class="glyphicon glyphicon-pencil"></a>
+                </td>
             </tr>            
         </tbody>
     </table>

@@ -20,7 +20,7 @@ angular.module('app.factory').factory('Datatable', function(HOSTNAME, $resource,
                 {entity:entity, info:'data'},
                 {'query': { method:'GET', cache: false, isArray:true }}
             );
-            titles.query(function (data) {
+            titles.query(function (data) {                
                 deferred.resolve(data);
             });
             return deferred.promise;
